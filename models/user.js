@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 
 
@@ -15,7 +15,7 @@ const userSchema = new Schema({
     friends: [{ type: Schema.Types.ObjectId, ref: 'User'}]
 })
 
-const User = mongoose.model('User', userSchema);
+const User = model('User', userSchema);
 
 
 module.exports = User;
