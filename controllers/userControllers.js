@@ -66,6 +66,20 @@ module.exports = {
            } catch (err) {
             res.status(500).json(err);
            }
+    },
+// remove friend from friend list.
+    async killFriend(req, res) {
+        try {
+            const friends = await User.findOneAndRemove(
+                {_id: req.params.userId},
+                {$pull: {friends: req.params.friendId}});
+            if (!friends) {
+                return res.status(404).json({message:'You have no friends ;-)'})
+            }
+            res.json(friends)
+        } catch (err) {
+            res.status(500).json(err);
+        }
     }
 
 
