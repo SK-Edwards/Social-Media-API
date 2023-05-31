@@ -31,10 +31,43 @@ module.exports = {
 
     async createUser(req, res) {
         try {
-            const newUser = User.create(req.body);
+            const newUser = await User.create(req.body);
             res.json(newUser);
         } catch (err) {
             res.status(500).json(err);
         }
+    },
+
+    // Updating user
+    async updateUser(req, res) {
+        try {
+            const fixedUser = await User.findOneAndUpdate({_id: req.params.userId}, {username: req.body.username}, {email: req.body.email});
+            if (!fixedUser) {
+               return res.status(404).json({message: 'No such thought'})
+            }
+           res.json(fixedUser)
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    // adding a user to another user's friend list.
+
+    async addFriend(req, res) {
+        try {
+            const friends = await User.findOneAndUpdate(
+                {_id: req.params._id},    
+                {$push: {friends: req.body._id}},
+                {new: true}
+            ) ;
+            if (!friends) {
+                return res.status(404).json({message:'No such user found'});
+            }
+            res.json(friends)
+           } catch (err) {
+            res.status(500).json(err);
+           }
     }
+
+
+    
 };
