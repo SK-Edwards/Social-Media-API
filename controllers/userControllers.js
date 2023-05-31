@@ -55,8 +55,8 @@ module.exports = {
     async addFriend(req, res) {
         try {
             const friends = await User.findOneAndUpdate(
-                {_id: req.params._id},    
-                {$push: {friends: req.body._id}},
+                {_id: req.params.userId},    
+                {$push: {friends: req.params.friendId}},
                 {new: true}
             ) ;
             if (!friends) {
