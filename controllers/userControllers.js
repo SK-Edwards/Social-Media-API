@@ -80,8 +80,21 @@ module.exports = {
         } catch (err) {
             res.status(500).json(err);
         }
-    }
-
-
+    },
     
+    // Deleting user
+
+    async killUser(req, res){
+        try {
+            const user = await User.findOneAndDelete(
+                {_id: req.params.userId}
+                );
+                if (!user) {
+                    return res.status(404).json({message: 'This person does not exist'})
+                }
+                res.json(user)
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    }
 };

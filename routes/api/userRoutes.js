@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 
 const {
-    getUsers, getSingleUser, createUser, addFriend, killFriend
+    getUsers, getSingleUser, createUser, addFriend, killFriend, killUser
 } = require('../../controllers/userControllers');
 
 
@@ -13,7 +13,7 @@ router.route('/').get(getUsers).post(createUser);
 
 // /api/users/:userId
 
-router.route('/:userId').get(getSingleUser);
+router.route('/:userId').get(getSingleUser).delete(killUser);
 
 
 // /api/users/:userId/friends/:friendId
