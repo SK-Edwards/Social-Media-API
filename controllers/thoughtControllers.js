@@ -1,6 +1,6 @@
 const { Thought, User } =  require('../models')
 
-module.exports = {
+const thoughtController = {
     // get all thoughts 
     async getThoughts(req, res) {
         try {
@@ -90,8 +90,8 @@ if (!userThought) {
         try {
              const reaction = await Thought.findOneAndUpdate(
                 {_id: req.params.thoughtId},
-                {$addToSet: {reactions: req.body}},
-                {new: true}
+                { $addToSet: {reactions: req.body}},
+                { runValidators: true, new: true }
             );
             if(!reaction) {
                 return res.status(404).json({message: 'No reactions, No one cares abt you'})
@@ -102,28 +102,24 @@ if (!userThought) {
         }
     },
      // delete reactions
+     killReaction(req, res) {
+        Thought.findOneAndUpdate(
+          { _id: req.params.thoughtId },
+          { $pull: { reactions: { reactionId: req.params.reactionId } } },
+          { runValidators: true, new: true }
+        )
+          .then((dbThoughtData) => {
+            if (!dbThoughtData) {
+              return res.status(404).json({ message: 'No thought with this id!' });
+            }
+            res.json(dbThoughtData);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+          });
+      },
+    };
+    
 
-      killReaction(req, res) {
-        
-            Thought.findOneAndUpdate(
-                {_id: req.params.thoughtId},
-                {$pull: {reactions:{reactionId: req.params.reactionId}}},
-                {runValidators: true, new: true}
-            ).then((dbThoughtData) => {
-                if (!dbThoughtData) {
-                    return res.status(404).json({msg: "No thought"})
-                }
-                res.json(dbThoughtData)
-            })
-            .catch((err)=> {
-                console.log(err)
-            })
-            // if(!reaction) {
-            //     return res.status(404).json({message: 'No one loves you'})
-            },
-            // res.json(reaction)
-    //     (err) {
-    //         res.status(500).json(err)
-    //     }
-    //  }
-};
+    module.exports = thoughtController;
