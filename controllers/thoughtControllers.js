@@ -57,6 +57,38 @@ if (!userThought) {
             res.status(500).json(err);
         }
     },
-    
+
+    // delete thought 
+
+    async killThought(req, res) {
+        try {
+            const thought = await Thought.findOneAndDelete({_id: req.params.thoughtId});
+            if(!thought) {
+                return res.status(404).json({message: 'You have no thoughts'})
+            }
+            res.json(thought)
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+// creating a reaction
+
+    async createReaction(req, res) {
+        try {
+            const newReaction = await Thought.reaction.create(req.body)
+
+            const reaction = await Thought.findOneAndUpdate(
+                {thoughtId: req.params.thoughtId},
+                {$push: {reactions: newReaction.body}},
+                {new: true}
+            );
+            if(!reaction) {
+                return res.status(404).json({message: 'No reactions, No one cares abt you'})
+            }
+            res.json(reaction)
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    }
 
 };
