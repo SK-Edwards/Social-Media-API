@@ -4,7 +4,7 @@ const { Schema, model} = require('mongoose');
 const reactionSchema = new Schema({
 reactionId: {type: Schema.Types.ObjectId },
 reactionBody: {type: String, required: true, maxlength: 280},
-username: { type: Schema.Types.ObjectId, ref: 'User'},
+username: { type: String, ref: 'User'},
 createdAt: { type: Date, default: Date.now }
 
 });

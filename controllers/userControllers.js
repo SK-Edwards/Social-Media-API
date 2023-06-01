@@ -68,6 +68,7 @@ module.exports = {
            }
     },
 // remove friend from friend list.
+
     async killFriend(req, res) {
         try {
             const friends = await User.findOneAndRemove(

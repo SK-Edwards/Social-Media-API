@@ -75,11 +75,9 @@ if (!userThought) {
 
     async createReaction(req, res) {
         try {
-            const newReaction = await Thought.reaction.create(req.body)
-
-            const reaction = await Thought.findOneAndUpdate(
-                {thoughtId: req.params.thoughtId},
-                {$push: {reactions: newReaction.body}},
+             const reaction = await Thought.findOneAndUpdate(
+                {_id: req.params.thoughtId},
+                {$push: {reactions: req.body}},
                 {new: true}
             );
             if(!reaction) {
@@ -89,6 +87,21 @@ if (!userThought) {
         } catch (err) {
             res.status(500).json(err);
         }
-    }
+    },
+     // delete reactions
 
+     async killReaction(req, res) {
+        try {
+            const reaction = await Thought.findOneAndRemove(
+                {_id: req.params.thoughtId},
+                {$pull: {reactions: req.params.reactionId}}
+            )
+            if(!reaction) {
+                return res.status(404).json({message: 'No one loves you'})
+            }
+            res.json(reaction)
+        } catch (err) {
+            res.status(500).json(err)
+        }
+     }
 };
