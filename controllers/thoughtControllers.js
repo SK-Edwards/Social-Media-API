@@ -94,7 +94,7 @@ if (!userThought) {
         try {
             const reaction = await Thought.findOneAndRemove(
                 {_id: req.params.thoughtId},
-                {$pull: {reactions: req.params.reactionId}}
+                {$pull: {reactions:{reactionId: req.params.reactionId}}}
             )
             if(!reaction) {
                 return res.status(404).json({message: 'No one loves you'})
